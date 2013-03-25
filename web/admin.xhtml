@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="index.css" />
+    </h:head>
+    <h:body style="background:
+            url(resources/images/1w.jpg);">
+        <p:growl id="growl" />
+        <div class="codrops-top">
+            <a href="http://unl.edu.ec/">
+                <strong>UNIVERSIDAD NACIONAL DE LOJA </strong>
+            </a>
+
+            <span class="right">
+                <a href="">
+                    <strong>Sistema de Registro de Pasantes</strong>
+                </a>
+            </span>
+            <div class="clr"></div>
+        </div>
+
+        <div id="sgp">
+            <header>
+                <a href="index.html" id="logo"><h1><span class="color_orange">S</span><span class="color_yellow">R</span><span class="color_white">P</span></h1></a>
+                <h2 class="slogan color_black">Sistema de Registro de Pasantes</h2>
+            </header>
+        </div>
+
+
+        <div id="log">
+            <section>				
+                <div id="container_demo" >
+                    <div id="wrapper">
+                        <div id="login">
+                            <h:form id="form">
+                                <h1>Iniciar Sesión</h1> 
+                                <p> 
+                                    <label for="username"  data-icon="u" >
+                                        <samp class="color">Correo electrónico </samp></label>
+                                    <p:inputText required="true" label="Correo" value="#{secionLogeoBean.usuario}"/>
+                                </p>
+                                <p>&nbsp;</p>
+                                <p> 
+                                    <label for="password" data-icon="p">
+                                        <samp class="color">Contraseña</samp></label>
+                                    <p:password required="true" label="Contraseña" value="#{secionLogeoBean.contrasenia}"/>
+                                </p>
+                                <p class="signin button">
+                                    <p:commandButton update=":growl,:form" value="ingresar" action="#{secionLogeoBean.ingresar()}"/>
+                                </p>
+                            </h:form>
+
+                        </div>
+                    </div>
+                </div>  
+            </section>
+        </div>
+    </h:body>
+</html>

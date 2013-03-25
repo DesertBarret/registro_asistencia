@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Pasantes</title>
+        <h:outputStylesheet library="css" name="estilo.css" />
+        <h:outputScript library="js" name="backtop.js" />
+        <h:outputScript library="js" name="popup.js" />
+        <script>
+            function salir() {
+                setTimeout("javascript:location.reload()", 300);
+            }
+        </script>
+        <c:if test="#{!secionLogeoBean.logeo}">
+            <script>
+                location.href = "../admin.html"
+            </script>
+        </c:if>
+    </h:head>
+    <h:body styleClass="body" rendered="#{secionLogeoBean.logeo}">
+        <p:growl id="growl" />
+        <div class="contenedor1" style="z-index: 0">
+            <!-- Boton Subir al Inicio -->
+            <div id="pagewrap">
+                <p id="back-top" style="display: block;">
+                    <a href="#top"><span></span></a>
+                </p>
+            </div>
+            <div class="contenedorbtn">
+                <ul class="nav" style="padding: 73px 0 0px 0;">
+                    <li>
+                        <h:form>
+                            <h:commandLink>  
+                                <p:graphicImage value="../resources/images/excel.png" /> EXEL
+                                <p:dataExporter type="xls" preProcessor="#{pasanteBean.preProcess}" encoding="ISO-8859-1" 
+                                                target=":formt:dataTable" fileName="ListaPasantes" pageOnly="true"/>  
+                            </h:commandLink>  
+                        </h:form>
+                    </li>
+                    <li>
+                        <h:form>
+                            <h:commandLink>  
+                                <p:graphicImage value="../resources/images/pdf.png" /> PDF
+                                <p:dataExporter type="pdf" preProcessor="#{pasanteBean.preProcess}" encoding="ISO-8859-1" 
+                                                target=":formt:dataTable" fileName="ListaPasantes" pageOnly="true"/>  
+                            </h:commandLink>  
+                        </h:form>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="contenedor2">
+                <div class="contenedorbarra">
+                    <h:form>
+                        <p:menubar>
+                            <p:menuitem value="Pasantes que han terminado sus labores" 
+                                        icon="ui-icon-extlink" action="#{redireccionarBean.findPasantes()}" />
+                            <p:submenu label="SRP UTI" style="float: right" icon="ui-icon-gear">
+                                <p:menuitem value="Pasantes" 
+                                            icon="ui-icon-extlink" action="#{redireccionarBean.pasantes()}" />
+                                <p:menuitem value="Departamentos" 
+                                            icon="ui-icon-extlink" action="#{redireccionarBean.departamentos()}" />
+                                <p:menuitem value="Salir" 
+                                            icon="ui-icon-extlink" action="#{secionLogeoBean.salir()}" onclick="salir();" />
+
+                            </p:submenu>
+                        </p:menubar>
+                    </h:form>
+                </div>
+                <br></br> <br></br> <br></br>
+                <hr></hr>
+                <br></br>
+                <hr></hr>
+                <h:form id="formt">
+                    <p:dataTable widgetVar="userTable"
+                                 id="dataTable" var="pasante"
+                                 value="#{pasanteBean.listPasantesConcluidos}"
+                                 editable="true"
+                                 rows="#{pasanteBean.listPasantesConcluidos.size()}" >
+
+                        <f:facet name="header">
+                            <h:outputLabel style="font-size: 16px; font-family: serif"
+                                           value="Lista de pasantes que han obtenido 
+                                           #{registroDiarioPasantesBean.HORAS_MAXIMAS_CUMPLIR} horas" />
+                        </f:facet>
+                        <f:facet name="header">
+                            <p:outputPanel styleClass="buscar">
+                                <h:outputText value="Buscar " title="Busca Pasantes, por cualquier criterio"/>
+                                <p:inputText id="globalFilter" onkeyup="userTable.filter();" style="width:150px" title="Busca Pasantes, por cualquier criterio"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column filterBy="#{pasante.nombre}">
+                            <f:facet name="header">Nombres</f:facet>
+                            <h:outputText value="#{pasante.nombre}" />
+                        </p:column>
+                        <p:column filterBy="#{pasante.apellido}">
+                            <f:facet name="header">Apellidos</f:facet>
+                            <h:outputText value="#{pasante.apellido}" />                              
+                        </p:column>
+                        <p:column filterBy="#{pasante.cedula}" style="width: 8%">
+                            <f:facet name="header">Cedula</f:facet>
+                            <h:outputText value="#{pasante.cedula}" />
+                        </p:column>
+                        <p:column style="width: 12%">
+                            <f:facet name="header">Horas cumplidas</f:facet>
+                            <h:outputText value="#{pasante.horasCumplidas}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" filterBy="#{pasante.activo}" rendered="#{pasanteBean.imprimir}"
+                                  filterOptions="#{pasanteBean.estadoOptions}" style="width: 8%">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{pasante.activo}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:selectOneMenu value="#{pasante.activo}" style="width: 100%">
+                                        <f:selectItems value="#{pasanteBean.estadoFilter}"
+                                                       var="act" itemLabel="#{act}" itemValue="#{act}" />
+                                    </h:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:ajax event="rowEdit" listener="#{pasanteBean.onEdit}"
+                                update=":growl" />
+                        <p:column style="width:2%" rendered="#{pasanteBean.imprimir}">
+                            <p:rowEditor/>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+            </div>
+        </div>
+        <div id="pie_index">
+            <center>Sistema realizado por estudiantes de la Universidad Nacional de Loja</center>
+        </div>
+    </h:body>
+</html>

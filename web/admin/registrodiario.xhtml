@@ -5,25 +5,35 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
-      >
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
     <h:head>
         <title>Pasantes</title>
         <h:outputStylesheet library="css" name="estilo.css" />
         <h:outputScript library="js" name="backtop.js" />
         <h:outputScript library="js" name="popup.js" />
+        <script>
+            function salir() {
+                setTimeout("javascript:location.reload()", 330);
+            }
+        </script>
+        <c:if test="#{!secionLogeoBean.logeo}">
+            <script>
+                location.href = "../admin.html"
+            </script>
+        </c:if>
     </h:head>
     <h:body styleClass="body" style="background:
-            url(resources/images/2w.jpg);">
+            url(../resources/images/2w.jpg);">
         <p:growl id="growl" />
         <!-- PopUP Crear un Usuario -->
         <div class="popupContact">
             <a class="popupContactClose">x</a>
             <div class="login">
                 <h:form id="form2" styleClass="nuevouser">
-                    <p:panel style="background: url(resources/images/fondo.jpg)" header="Registrar Ingreso/salida">
+                    <p:panel style="background: url(../resources/images/fondo.jpg)" header="Registrar Ingreso/salida">
                         <h:panelGrid columns="2">
                             <h:outputLabel value="Cedula: *" />
-                            <p:panel id="panel"  style="background: url(resources/images/fondo.jpg);width: 160px;border: none;">
+                            <p:panel id="panel"  style="background: url(../resources/images/fondo.jpg);width: 160px;border: none;">
                                 <p:focus context="panel"/>  
                                 <p:inputMask   value="#{registroDiarioPasantesBean.cedulaPasante}"
                                                required="true" label="Cedula" mask="9999999999" style="width: 158px;margin-left: -16px">
@@ -31,8 +41,8 @@
                                 </p:inputMask>
                             </p:panel>
                             <p:clock pattern="HH:mm:ss" mode="server" />
-                            <p:commandButton  update=":formt,:formt:dataTable:subtabla,:growl,panel" 
-                                              action="#{registroDiarioPasantesBean.registrarIngreso()}"
+                            <p:commandButton  update=":formt:dataTable,:formt:dataTable:subtabla,:growl,panel" 
+                                              action="#{registroDiarioPasantesBean.registrarIngresoAdmin()}"
                                               value="ACEPTAR"  icon="ui-icon-check"
                                               style="float: right" />  </h:panelGrid>
                     </p:panel>
@@ -57,6 +67,14 @@
                             <p:menuitem >       
                                 <p:clock pattern="HH:mm:ss  dd/MM/yyyy" mode="server" />
                             </p:menuitem>
+                            <p:submenu label="SRP UTI" style="float: right" icon="ui-icon-gear">
+                                <p:menuitem value="Pasantes" 
+                                            icon="ui-icon-extlink" action="#{redireccionarBean.pasantes()}" />
+                                <p:menuitem value="Departamentos" 
+                                            icon="ui-icon-extlink" action="#{redireccionarBean.departamentos()}" />
+                                <p:menuitem value="Salir" 
+                                            icon="ui-icon-extlink" action="#{secionLogeoBean.salir()}" onclick="salir();" />
+                            </p:submenu>
                         </p:menubar>
                     </h:form>
                 </div>

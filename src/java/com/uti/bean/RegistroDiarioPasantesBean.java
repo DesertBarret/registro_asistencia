@@ -7,12 +7,10 @@ package com.uti.bean;
 import com.uti.entities.HorasPasanteDepartamento;
 import com.uti.entities.Pasantes;
 import com.uti.entities.RegistroAsistencia;
-import com.uti.entities.RegistroPc;
 import com.uti.jpacontroller.DepartamentoJpaController;
 import com.uti.jpacontroller.HorasPasanteDepartamentoJpaController;
 import com.uti.jpacontroller.PasantesJpaController;
 import com.uti.jpacontroller.RegistroAsistenciaJpaController;
-import com.uti.jpacontroller.RegistroPcJpaController;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,6 +115,7 @@ public class RegistroDiarioPasantesBean {
                     pasantesRegistroDiario = pasantesJpaController.findPasantesRegistro(cedulaPasante).get(0);
                     registroAsistencia.setPasantes(pasantesRegistroDiario);
                     registroAsistencia.setDepartamento(pasantesRegistroDiario.getDepartamento());
+                    registroAsistencia.setIpPc(recolectarIpPcRemoto());
                     registroAsistenciaJpaController.create(registroAsistencia);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                             FacesMessage.SEVERITY_INFO, "Ingreso registrado Correctamente", null));
@@ -133,6 +132,7 @@ public class RegistroDiarioPasantesBean {
                     pasantesRegistroDiario = pasantesJpaController.findPasantesRegistro(cedulaPasante).get(0);
                     registroAsistencia.setPasantes(pasantesRegistroDiario);
                     registroAsistencia.setDepartamento(pasantesRegistroDiario.getDepartamento());
+                    registroAsistencia.setIpPc(recolectarIpPcRemoto());
                     registroAsistenciaJpaController.create(registroAsistencia);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                             FacesMessage.SEVERITY_INFO, "Ingreso registrado Correctamente", null));
@@ -276,64 +276,47 @@ public class RegistroDiarioPasantesBean {
     public void registrarIngreso() throws NamingException, Exception {
         RegistroAsistenciaJpaController registroAsistenciaJpaController = new RegistroAsistenciaJpaController();
         RegistroAsistencia registroAsistencia = null;
-        RegistroPcJpaController registroPcJpaController = new RegistroPcJpaController();
-        RegistroPc registroPc = null;
         try {
             registroAsistencia = registroAsistenciaJpaController.findRegistroAsistenciaPasante(cedulaPasante, new java.util.Date()).get(0);
         } catch (Exception e) {
         }
-        try {
-            registroPc = registroPcJpaController.findResgistroPcIP(recolectarIpPcRemoto()).get(0);
-        } catch (Exception e) {
-        }
-
-        if (registroPc != null && registroPc.getDia().getDate() != new java.util.Date().getDate()) {
-            registroPcJpaController.destroy(registroPc.getId());
-            registroPc = null;
-        } else if (registroPc != null && !registroAsistencia.getHoraSalidaManiana().equals(" ")
-                && registroAsistencia.getHoraEntrada().equals(" ")) {
-            registroPcJpaController.destroy(registroPc.getId());
-            registroPc = null;
-        }
+        boolean existeIP = registroAsistenciaJpaController.isIPRegistroAsistencia(recolectarIpPcRemoto(), new Date());
+        boolean ipPasante = registroAsistenciaJpaController.isIpPasante(recolectarIpPcRemoto(), cedulaPasante, new java.util.Date());
 
         if (registroAsistencia == null) {
-            if (registroPc == null) {
-                if (registrarIngresoDiarioPasante(registroAsistencia)) {
-                    registroPc = new RegistroPc();
-                    registroPc.setIngreso("on");
-                    registroPc.setSalida("off");
-                    registroPc.setDia(new java.util.Date());
-                    registroPc.setIp(recolectarIpPcRemoto());
-                    registroPcJpaController.create(registroPc);
-                }
+            if (!existeIP) {
+                registrarIngresoDiarioPasante(registroAsistencia);
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                        FacesMessage.SEVERITY_INFO, "Imposible registrar su ingreso la pc ya realizo un registro", null));
-            }
-        } else if (new java.util.Date().getHours() >= 14 && registroAsistencia.getHoraEntrada().equals(" ")) {
-            if (registroPc == null) {
-                if (registrarIngresoDiarioPasante(registroAsistencia)) {
-                    registroPc = new RegistroPc();
-                    registroPc.setIngreso("on");
-                    registroPc.setSalida("off");
-                    registroPc.setDia(new java.util.Date());
-                    registroPc.setIp(recolectarIpPcRemoto());
-                    registroPcJpaController.create(registroPc);
-                }
-            } else {
-                if (registroPc.getIngreso().equals("on")) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                            FacesMessage.SEVERITY_INFO, "Imposible registrar su ingreso la pc ya realizo un registro", null));
-                }
+                        FacesMessage.SEVERITY_WARN, "La PC ya relizo un ingreso", null));
+
             }
         } else {
-            if (registroPc.getSalida().equals("on")) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                        FacesMessage.SEVERITY_INFO, "Imposible registrar su ingreso la pc ya realizo un registro", null));
-            } else {
-                if (registrarSalidaDiarioPasante(registroAsistencia)) {
-                    registroPc.setSalida("on");
-                    registroPcJpaController.edit(registroPc);
+            if (new java.util.Date().getHours() >= 7 && new java.util.Date().getHours() < 14) {
+                if (ipPasante) {
+                    if (registroAsistencia.getHoraSalidaManiana().equals(" ")) {
+                        registrarSalidaDiarioPasante(registroAsistencia);
+                    } else {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                                FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la mañana", null));
+                    }
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                            FacesMessage.SEVERITY_WARN, "Solo se puede marcar la salida desde la misma pc en la que marco el ingreso", null));
+                }
+            } else if (new java.util.Date().getHours() >= 14 && new java.util.Date().getHours() <= 19) {
+                if (ipPasante) {
+                    if (registroAsistencia.getHoraEntrada().equals(" ")) {
+                        registrarIngresoDiarioPasante(registroAsistencia);
+                    } else if (registroAsistencia.getHoraSalida().equals(" ")) {
+                        registrarSalidaDiarioPasante(registroAsistencia);
+                    } else {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                                FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la Tarde", null));
+                    }
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                            FacesMessage.SEVERITY_WARN, "Solo se puede marcar la salida desde la misma pc en la que marco el ingreso", null));
                 }
             }
         }
@@ -345,5 +328,49 @@ public class RegistroDiarioPasantesBean {
                 (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return request.getRemoteAddr();
 
+    }
+
+    public void registrarIngresoAdmin() throws NamingException, Exception {
+        RegistroAsistenciaJpaController registroAsistenciaJpaController = new RegistroAsistenciaJpaController();
+        RegistroAsistencia registroAsistencia = null;
+        try {
+            registroAsistencia = registroAsistenciaJpaController.findRegistroAsistenciaPasante(cedulaPasante, new java.util.Date()).get(0);
+        } catch (Exception e) {
+        }
+        boolean ipPasante = registroAsistenciaJpaController.isIpPasante(recolectarIpPcRemoto(), cedulaPasante, new java.util.Date());
+
+        if (registroAsistencia == null) {
+            registrarIngresoDiarioPasante(registroAsistencia);
+        } else {
+            if (new java.util.Date().getHours() >= 7 && new java.util.Date().getHours() < 14) {
+                if (ipPasante) {
+                    if (registroAsistencia.getHoraSalidaManiana().equals(" ")) {
+                        registrarSalidaDiarioPasante(registroAsistencia);
+                    } else {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                                FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la mañana", null));
+                    }
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                            FacesMessage.SEVERITY_WARN, "Solo se puede marcar la salida Desde la PC del Administrador", null));
+                }
+            } else if (new java.util.Date().getHours() >= 14 && new java.util.Date().getHours() <= 19) {
+                if (ipPasante) {
+                    if (registroAsistencia.getHoraEntrada().equals(" ")) {
+                        registrarIngresoDiarioPasante(registroAsistencia);
+                    } else if (registroAsistencia.getHoraSalida().equals(" ")) {
+                        registrarSalidaDiarioPasante(registroAsistencia);
+                    } else {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                                FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la Tarde", null));
+                    }
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                            FacesMessage.SEVERITY_WARN, "Solo se puede marcar la salida Desde la PC del Administrador", null));
+                }
+            }
+
+        }
+        updatePasantesDia();
     }
 }

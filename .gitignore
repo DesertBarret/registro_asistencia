@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+/build/
+/Prueba Sqlite/nbproject/private/
+/dist/

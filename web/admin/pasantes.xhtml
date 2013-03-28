@@ -13,7 +13,7 @@
         <h:outputScript library="js" name="popup.js" />
         <script>
             function salir() {
-                setTimeout("javascript:location.reload()", 300);
+                setTimeout("javascript:location.reload()", 330);
             }
         </script>
         <c:if test="#{!secionLogeoBean.logeo}">
@@ -49,12 +49,17 @@
                                          label="Cedula" required="true" mask="9999999999">
                             </p:inputMask>
                             <br></br>
+                            <h:outputLabel value="Carrera: *" />
+                            <p:inputText value="#{pasanteBean.pasante.carrera}"
+                                         label="Carrera" required="true">
+                            </p:inputText>
+                            <br></br>
                             <h:outputLabel value="Departamento *" />
                             <h:selectOneMenu value="#{pasanteBean.departamento}" style="width: 100%" styleClass="rol">
                                 <f:selectItems value="#{pasanteBean.departamentos}"
                                                var="departamento" itemLabel="#{departamento.nombre}" 
                                                itemValue="#{departamento.id}" />
-                            </h:selectOneMenu>
+                            </h:selectOneMenu>                         
                         </h:panelGrid>
                         <br></br>
 
@@ -79,6 +84,7 @@
             <div class="contenedorbtn">
                 <ul class="nav">
                     <li><a href="#" class="popupUser">Nuevo  Pasante</a></li>
+                    <li><h:form><p:commandLink action="#{redireccionarBean.registroDiario()}" style="font-size: 13px;">Registrar Ingreso Pasantes</p:commandLink></h:form></li>
                 </ul>
             </div>
             <div class="contenedor2">

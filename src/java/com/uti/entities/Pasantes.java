@@ -30,6 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class Pasantes implements Serializable {
 
+    @Column(name = "carrera")
+    private String carrera;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -262,5 +264,13 @@ public class Pasantes implements Serializable {
             cedulaCorrecta = false;
         }
         return cedulaCorrecta;
+    }
+
+    public String getCarrera() {
+        return carrera;
+    }
+
+    public void setCarrera(String carrera) {
+        this.carrera = carrera;
     }
 }

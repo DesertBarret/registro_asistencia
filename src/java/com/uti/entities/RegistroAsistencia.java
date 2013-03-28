@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RegistroAsistencia implements Serializable {
 
+    @Column(name = "ip_pc")
+    private String ipPc;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -155,5 +157,13 @@ public class RegistroAsistencia implements Serializable {
     @Override
     public String toString() {
         return "com.uti.entities.RegistroAsistencia[ id=" + id + " ]";
+    }
+
+    public String getIpPc() {
+        return ipPc;
+    }
+
+    public void setIpPc(String ipPc) {
+        this.ipPc = ipPc;
     }
 }

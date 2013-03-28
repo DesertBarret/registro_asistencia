@@ -33,6 +33,11 @@ public class RedireccionarBean {
                 .redirect("pasantes.html");
     }
 
+    public void registroDiario() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext()
+                .redirect("registrodiario.html");
+    }
+
     public void findPasantes() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext()
                 .redirect("findpasantes.html");

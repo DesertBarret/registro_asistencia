@@ -99,6 +99,46 @@ public class RegistroAsistenciaJpaController implements Serializable {
         }
     }
 
+    public boolean isIPRegistroAsistencia(String ip, Date fecha) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em
+                    .createQuery("SELECT p FROM RegistroAsistencia p WHERE p.ipPc = ?1 AND p.fecha=?2");
+            q.setParameter(1, ip);
+            q.setParameter(2, fecha);
+            try {
+                if ((RegistroAsistencia) q.getSingleResult() != null) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (Exception e) {
+                return false;
+            }
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean isIpPasante(String ip, String cedula, Date fecha) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em
+                    .createQuery("SELECT p FROM RegistroAsistencia p WHERE p.ipPc = ?1 AND p.pasantes.cedula = ?2 AND p.fecha = ?3");
+            q.setParameter(1, ip);
+            q.setParameter(2, cedula);
+            q.setParameter(3, fecha);
+            try {
+                q.getSingleResult();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } finally {
+            em.close();
+        }
+    }
+
     public int getRegistroAsistenciaIdMAX() {
         EntityManager em = getEntityManager();
         try {

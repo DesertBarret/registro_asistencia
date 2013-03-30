@@ -60,7 +60,6 @@ public class DepartamentoBean {
 
     public void createDepartamento() throws Exception {
         DepartamentoJpaController departamentoJpaController = new DepartamentoJpaController();
-
         departamento.setId(departamentoJpaController.getDepatamentoIdMAX() + 1);
         departamentoJpaController.create(departamento);
         updateDepartamentos();

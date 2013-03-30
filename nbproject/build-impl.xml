@@ -992,6 +992,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${file.reference.poi-3.8-20120326.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.primefaces-3.5.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.sqlite-jdbc-3.7.2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.primefaces-mobile-0.9.3.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.jpa20-persistence.classpath}" todir="${build.web.dir}//"/>
         <copyfiles files="${libs.jstl11.classpath}" todir="${build.web.dir}//"/>
         <copyfiles files="${libs.jsf20.classpath}" todir="${build.web.dir}//"/>
@@ -1011,6 +1012,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${file.reference.poi-3.8-20120326.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${file.reference.primefaces-3.5.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${file.reference.sqlite-jdbc-3.7.2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.primefaces-mobile-0.9.3.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.jpa20-persistence.classpath}" todir="${build.web.dir}//"/>
         <copyfiles files="${libs.jstl11.classpath}" todir="${build.web.dir}//"/>
         <copyfiles files="${libs.jsf20.classpath}" todir="${build.web.dir}//"/>

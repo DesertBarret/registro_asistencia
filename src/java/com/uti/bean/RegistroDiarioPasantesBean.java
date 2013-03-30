@@ -337,36 +337,24 @@ public class RegistroDiarioPasantesBean {
             registroAsistencia = registroAsistenciaJpaController.findRegistroAsistenciaPasante(cedulaPasante, new java.util.Date()).get(0);
         } catch (Exception e) {
         }
-        boolean ipPasante = registroAsistenciaJpaController.isIpPasante(recolectarIpPcRemoto(), cedulaPasante, new java.util.Date());
-
         if (registroAsistencia == null) {
             registrarIngresoDiarioPasante(registroAsistencia);
         } else {
             if (new java.util.Date().getHours() >= 7 && new java.util.Date().getHours() < 14) {
-                if (ipPasante) {
-                    if (registroAsistencia.getHoraSalidaManiana().equals(" ")) {
-                        registrarSalidaDiarioPasante(registroAsistencia);
-                    } else {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                                FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la mañana", null));
-                    }
+                if (registroAsistencia.getHoraSalidaManiana().equals(" ")) {
+                    registrarSalidaDiarioPasante(registroAsistencia);
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                            FacesMessage.SEVERITY_WARN, "Solo se puede marcar la salida Desde la PC del Administrador", null));
+                            FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la mañana", null));
                 }
             } else if (new java.util.Date().getHours() >= 14 && new java.util.Date().getHours() <= 19) {
-                if (ipPasante) {
-                    if (registroAsistencia.getHoraEntrada().equals(" ")) {
-                        registrarIngresoDiarioPasante(registroAsistencia);
-                    } else if (registroAsistencia.getHoraSalida().equals(" ")) {
-                        registrarSalidaDiarioPasante(registroAsistencia);
-                    } else {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                                FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la Tarde", null));
-                    }
+                if (registroAsistencia.getHoraEntrada().equals(" ")) {
+                    registrarIngresoDiarioPasante(registroAsistencia);
+                } else if (registroAsistencia.getHoraSalida().equals(" ")) {
+                    registrarSalidaDiarioPasante(registroAsistencia);
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                            FacesMessage.SEVERITY_WARN, "Solo se puede marcar la salida Desde la PC del Administrador", null));
+                            FacesMessage.SEVERITY_WARN, "Usted Ya marco la hora de salida de la Tarde", null));
                 }
             }
 

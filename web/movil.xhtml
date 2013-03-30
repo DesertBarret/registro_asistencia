@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Registrar Ingreso</title>
+        <h:outputStylesheet library="css" name="estilo.css" />
+    </h:head>
+    <h:body>
+        <f:view xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile"
+                contentType="text/html"
+                renderKitId="PRIMEFACES_MOBILE">
+            <pm:page title="TwitFaces">
+                <pm:view id="main" swatch="b">
+                    <pm:header title="SRP"> 
+                    </pm:header>
+                    <br></br>
+                    <div style="width: 150px; margin-right: auto;margin-left: auto;">
+                        <p:clock pattern="HH:mm:ss  dd/MM/yyyy" mode="server" />
+                    </div>
+                    <pm:content>
+                        <h:form id="form">
+                            <p:outputLabel value="Cédula" style="font-size: 15px"/> 
+                            <p:inputMask required="true" id="cedula" value="#{registroDiarioPasantesBean.cedulaPasante}" mask="9999999999"/>
+                            <p:separator />
+                            <p:commandButton value="Registrar" icon="refresh" update="dataTable,cedula,:growl"
+                                             actionListener="#{registroDiarioPasantesBean.registrarIngreso()}" />
+                            <p:dataTable widgetVar="userTable"
+                                         id="dataTable" var="pasante"
+                                         value="#{registroDiarioPasantesBean.listPasantesDia}">
+                                <p:column headerText="Nombres">
+                                    <h:outputText value="#{pasante.nombre}" />
+                                </p:column>
+                                <p:column headerText="Horas cumplidas" style="width: 12%">
+                                    <h:outputText value="#{pasante.horasCumplidas}" />
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                        <p:growl id="growl" />
+                    </pm:content>
+                </pm:view>
+            </pm:page>
+        </f:view>
+    </h:body>
+</html>

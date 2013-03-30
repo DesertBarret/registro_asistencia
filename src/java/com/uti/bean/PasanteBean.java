@@ -144,7 +144,6 @@ public class PasanteBean {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "El nuevo Pasante " + pasante.getNombre() + " a sido agregado exitosamente", null));
                 pasante = new Pasantes();
-                updatePasantes();
             } else {
                 pasante.setCedula("");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
@@ -155,6 +154,7 @@ public class PasanteBean {
                     "La cedula proporcionada ya ha sido registrada", null));
             pasante.setCedula("");
         }
+        updatePasantes();
     }
 
     private void updateDepartamentos() throws NamingException {
@@ -171,7 +171,6 @@ public class PasanteBean {
     }
 
     public void onEdit(RowEditEvent event) throws NamingException {
-
         PasantesJpaController pasantesJpaController = new PasantesJpaController();
         Pasantes pasantesed = new Pasantes();
         pasantesed = ((Pasantes) event.getObject());

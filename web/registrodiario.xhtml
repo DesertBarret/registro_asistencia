@@ -7,7 +7,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       >
     <h:head>
-        <title>Pasantes</title>
+        <title>Registrar Ingreso</title>
         <h:outputStylesheet library="css" name="estilo.css" />
         <h:outputScript library="js" name="backtop.js" />
         <h:outputScript library="js" name="popup.js" />
@@ -15,7 +15,7 @@
     <h:body styleClass="body" style="background:
             url(resources/images/2w.jpg);">
         <p:growl id="growl" />
-        <!-- PopUP Crear un Usuario -->
+        <!-- PopUP Registrar Ingreso/Salida -->
         <div class="popupContact">
             <a class="popupContactClose">x</a>
             <div class="login">
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="backgroundPopup"></div>
-        <!-- FIN PopUP Crear un Usuario -->
+        <!-- FIN PopUP Registrar Ingreso/Salida -->
         <div class="contenedor1" style="z-index: 0">
             <!-- Boton Subir al Inicio -->
             <div id="pagewrap">
@@ -86,38 +86,16 @@
                         </f:facet>
 
                         <p:column headerText="Nombres" filterBy="#{pasante.nombre} ">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{pasante.nombre}" />
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText value="#{pasante.nombre}" style="width:100%" />
-                                </f:facet>
-                            </p:cellEditor>
+                            <h:outputText value="#{pasante.nombre}" />
                         </p:column>
 
                         <p:column headerText="Apellidos" filterBy="#{pasante.apellido}">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{pasante.apellido}" />
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText value="#{pasante.apellido}" style="width:100%" />
-                                </f:facet>
-                            </p:cellEditor>
+                            <h:outputText value="#{pasante.apellido}" />
                         </p:column>
 
                         <p:column headerText="Departamento" filterBy="#{pasante.departamento.nombre}"
                                   filterOptions="#{registroDiarioPasantesBean.departamentosOptions}">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{pasante.departamento.nombre}" />
-                                </f:facet>
-
-                                <f:facet name="input">
-                                    <p:inputText value="#{pasante.departamento.nombre}" />
-                                </f:facet>
-                            </p:cellEditor>
+                            <h:outputText value="#{pasante.departamento.nombre}" />
                         </p:column>
 
                         <p:column headerText="Horas cumplidas" filterBy="#{pasante.horasCumplidas}"  style="width: 12%">
